@@ -1,0 +1,15 @@
+#Yang Chen, 999551783, robbie.chen@mail.utoronto.ca
+#Zhongyang Xiao, 999944173, e-mail address2
+
+Target1:
+  The foo does not check if the input arg is smaller than 96bytes, so that we can overflow the buffer to overwrite the return address via strcpy().
+
+Target2:
+  The target checked the length but we can still touch the "len" and "i" within that length, so we overwrite the len to 283 that we can overwrite return address
+  
+Target3:
+  Target3 is similar to Target1, we can overwrite the return address easily. But we need to take care of the additional "AAAA" in the buffer.
+  
+Target4:
+  Target4 is similar to Target2, we can overwrite the length that the target used to check the input. Then we use the env() to contain the i and return address.
+  
